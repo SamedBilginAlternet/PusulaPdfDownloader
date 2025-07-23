@@ -1,30 +1,30 @@
-# Moodle PDF Downloader
+# Moodle PDF Downloader (PyQt5)
 
-Moodle ders sayfalarındaki PDF ve dokümanları kolayca indirip ZIP dosyası olarak kaydetmenizi sağlayan bir Python uygulamasıdır. Kullanıcı dostu arayüzü ile ders URL’sini, indirme klasörünü ve ZIP dosya ismini seçebilirsiniz.
+Moodle ders sayfalarındaki PDF ve dokümanları kolayca indirip ZIP dosyası olarak kaydetmenizi sağlayan modern bir Python uygulamasıdır. PyQt5 tabanlı arayüzü ile ders URL’sini, indirme klasörünü ve ZIP dosya ismini kolayca seçebilirsiniz.
 
 ## Özellikler
-- **Kullanıcı Arayüzü (GUI):** Tkinter tabanlı kolay kullanım.
+- **Modern Arayüz:** PyQt5 ile şık ve kullanıcı dostu.
 - **Ders URL’si Girişi:** Herhangi bir Moodle dersinin bağlantısını girin.
-- **Klasör Seçici:** İndirme klasörünü seçin veya daha önce kullandıklarınızı açılır menüden seçin.
+- **Klasör Seçici:** İndirme klasörünü seçin.
 - **ZIP Dosya İsmi:** ZIP dosyasının adını belirleyin.
 - **Oturum (MoodleSession) Desteği:** Kendi oturum token’ınızı girerek erişim sağlayın.
-- **Ayarları Otomatik Kaydetme:** Son kullanılan URL, klasörler ve ZIP ismi kaydedilir.
+- **İlerleme Çubuğu:** İndirme işlemi sırasında ilerlemeyi takip edin.
 
 ## Kurulum
 1. Python 3 yüklü olmalı.
 2. Gerekli kütüphaneleri yükleyin:
    ```bash
-   pip install requests beautifulsoup4
+   pip install PyQt5 requests beautifulsoup4
    ```
 
 ## Kullanım
-1. `downloader.py` dosyasını çalıştırın:
+1. `downloader_pyqt.py` dosyasını çalıştırın:
    ```bash
-   python downloader.py
+   python downloader_pyqt.py
    ```
 2. Açılan arayüzde:
    - **Ders URL’si**: Moodle’daki dersin bağlantısını girin.
-   - **İndirme Klasörü**: Klasör seçin veya açılır menüden daha önce kullandıklarınızı seçin.
+   - **İndirme Klasörü**: Klasör seçin.
    - **ZIP Dosya İsmi**: Oluşturulacak ZIP dosyasının adını girin.
    - **MoodleSession**: Tarayıcınızdan aldığınız güncel oturum token’ınızı girin.
    - **İndir ve ZIP’le** butonuna tıklayın.
@@ -32,14 +32,8 @@ Moodle ders sayfalarındaki PDF ve dokümanları kolayca indirip ZIP dosyası ol
 ## MoodleSession Nasıl Alınır?
 1. Moodle’a giriş yapın.
 2. Tarayıcıda geliştirici araçlarını açın (F12).
-3.Bu dosyadaki MoodleSessionScripti kopyalayarak  MoodleSession değerine ulaşabilirsiniz.
-4. “Application” veya “Depolama” sekmesinden “Cookies” bölümüne gelin.
-5. `MoodleSession` değerini kopyalayın ve arayüze yapıştırın.
-
-
-
-
-
+3. Bu repodaki `MoodleSessionScript.js` dosyasındaki scripti kullanarak veya manuel olarak “Application/Depolama > Cookies” bölümünden `MoodleSession` değerini kopyalayın.
+4. Arayüze yapıştırın.
 
 ## Lisans
 MIT 
