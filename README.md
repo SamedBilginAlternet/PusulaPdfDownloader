@@ -32,8 +32,10 @@ Moodle ders sayfalarındaki PDF ve dokümanları kolayca indirip ZIP dosyası ol
 ## MoodleSession Nasıl Alınır?
 1. Moodle’a giriş yapın.
 2. Tarayıcıda geliştirici araçlarını açın (F12).
-3. “Application” veya “Depolama” sekmesinden “Cookies” bölümüne gelin.
-4. `MoodleSession` değerini kopyalayın ve arayüze yapıştırın.
+3.Bu dosyadaki MoodleSessionScripti kopyalayarak  MoodleSession değerine ulaşabilirsiniz.
+4. “Application” veya “Depolama” sekmesinden “Cookies” bölümüne gelin.
+5. `MoodleSession` değerini kopyalayın ve arayüze yapıştırın.
+
 
 
 
