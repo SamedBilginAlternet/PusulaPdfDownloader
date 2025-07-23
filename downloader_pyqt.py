@@ -6,9 +6,10 @@ from urllib.parse import urljoin
 from zipfile import ZipFile
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QLabel, QLineEdit, QPushButton, QFileDialog,
-    QVBoxLayout, QHBoxLayout, QProgressBar, QMessageBox
+    QVBoxLayout, QHBoxLayout, QProgressBar, QMessageBox, QFrame
 )
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtGui import QFont, QIcon
 
 # --- İNDİRME FONKSİYONU ---
 def download_and_zip(base_url, download_folder, zip_filename, cookies, progress_callback=None):
@@ -81,54 +82,135 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Moodle PDF Downloader (PyQt5)")
-        self.setGeometry(100, 100, 500, 350)
+        self.setGeometry(100, 100, 500, 400)
+        self.setWindowIcon(QIcon.fromTheme("document-save"))
         self.init_ui()
+        self.setStyleSheet(self.get_stylesheet())
+
+    def get_stylesheet(self):
+        return """
+        QWidget {
+            background-color: #23272e;
+            color: #f8f8f2;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            font-size: 15px;
+        }
+        QLineEdit, QProgressBar {
+            background: #2d323b;
+            border: 1.5px solid #44475a;
+            border-radius: 6px;
+            padding: 6px;
+            color: #f8f8f2;
+        }
+        QLabel {
+            color: #8be9fd;
+            font-weight: bold;
+        }
+        QPushButton {
+            background-color: #50fa7b;
+            color: #23272e;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        QPushButton:hover {
+            background-color: #3be8b0;
+        }
+        QProgressBar {
+            border: 1.5px solid #44475a;
+            border-radius: 6px;
+            text-align: center;
+        }
+        QProgressBar::chunk {
+            background-color: #ffb86c;
+            border-radius: 6px;
+        }
+        QFrame {
+            background: #282a36;
+            border-radius: 10px;
+            border: 1.5px solid #44475a;
+        }
+        """
 
     def init_ui(self):
-        layout = QVBoxLayout()
+        main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(30, 30, 30, 30)
+        main_layout.setSpacing(18)
+
+        # Başlık
+        title = QLabel("Moodle PDF Downloader")
+        title.setFont(QFont("Segoe UI", 20, QFont.Bold))
+        title.setAlignment(Qt.AlignCenter)
+        main_layout.addWidget(title)
+
+        # Ana kutu
+        frame = QFrame()
+        frame_layout = QVBoxLayout()
+        frame_layout.setSpacing(12)
+        frame.setLayout(frame_layout)
 
         # URL
-        layout.addWidget(QLabel("Ders URL'si:"))
+        url_label = QLabel("Ders URL'si:")
         self.url_input = QLineEdit()
-        layout.addWidget(self.url_input)
+        frame_layout.addWidget(url_label)
+        frame_layout.addWidget(self.url_input)
 
         # Klasör seçici
-        layout.addWidget(QLabel("İndirme Klasörü:"))
+        folder_label = QLabel("İndirme Klasörü:")
         hbox = QHBoxLayout()
         self.folder_input = QLineEdit()
-        hbox.addWidget(self.folder_input)
         self.folder_btn = QPushButton("Klasör Seç")
         self.folder_btn.clicked.connect(self.select_folder)
+        hbox.addWidget(self.folder_input)
         hbox.addWidget(self.folder_btn)
-        layout.addLayout(hbox)
+        # Klasörü Aç butonu
+        self.open_folder_btn = QPushButton("Klasörü Aç")
+        self.open_folder_btn.clicked.connect(self.open_folder)
+        hbox.addWidget(self.open_folder_btn)
+        frame_layout.addWidget(folder_label)
+        frame_layout.addLayout(hbox)
 
         # ZIP dosya ismi
-        layout.addWidget(QLabel("ZIP Dosya İsmi:"))
+        zip_label = QLabel("ZIP Dosya İsmi:")
         self.zip_input = QLineEdit("all_docs.zip")
-        layout.addWidget(self.zip_input)
+        frame_layout.addWidget(zip_label)
+        frame_layout.addWidget(self.zip_input)
 
         # MoodleSession
-        layout.addWidget(QLabel("MoodleSession (Oturum Token):"))
+        session_label = QLabel("MoodleSession (Oturum Token):")
         self.session_input = QLineEdit()
         self.session_input.setEchoMode(QLineEdit.Password)
-        layout.addWidget(self.session_input)
+        frame_layout.addWidget(session_label)
+        frame_layout.addWidget(self.session_input)
 
         # İndir butonu
         self.download_btn = QPushButton("İndir ve ZIP'le")
         self.download_btn.clicked.connect(self.start_download)
-        layout.addWidget(self.download_btn)
+        frame_layout.addWidget(self.download_btn)
 
         # İlerleme çubuğu
         self.progress = QProgressBar()
         self.progress.setValue(0)
-        layout.addWidget(self.progress)
+        frame_layout.addWidget(self.progress)
 
-        self.setLayout(layout)
+        main_layout.addWidget(frame)
+        self.setLayout(main_layout)
 
     def select_folder(self):
         folder = QFileDialog.getExistingDirectory(self, "Klasör Seç")
         if folder:
             self.folder_input.setText(folder)
+
+    def open_folder(self):
+        folder = self.folder_input.text().strip()
+        if folder and os.path.isdir(folder):
+            if sys.platform.startswith('win'):
+                os.startfile(folder)
+            elif sys.platform.startswith('darwin'):
+                os.system(f'open "{folder}"')
+            else:
+                os.system(f'xdg-open "{folder}"')
 
     def start_download(self):
         url = self.url_input.text().strip()
